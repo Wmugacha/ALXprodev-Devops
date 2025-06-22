@@ -1,10 +1,14 @@
 #!/bin/bash
 
-name=$(jq -r '.name' data.json)
-type=$(jq -r '[.types[].type.name] | join(", ")' data.json)
+name=$(jq -r '.name' data.json | awk '{print toupper(substr($0,1,1)) tolower(substr($0,2))}')
+type=$(jq -r '[.types[].type.name] | join(", ")' data.json | sed 's/,/ &/g')
 weight=$(jq -r '.weight' data.json)
 height=$(jq -r '.height' data.json)
 
-height_m=$(echo "scale=2; height / 10" | bc)
+formatted_height=$(echo "scale=2; $height / 10" | bc)
+formatted_weight=$(echo "scale=2; $weight / 10" | bc)
 
-echo "$name is of type $type, weighs ${weight}kg, and is ${height}m tall."
+formatted_height=$(printf "%.2f" "$formatted_height")
+formatted_weight=$(printf "%.2f" "$formatted_weight")
+
+echo "$name is of type $type, weighs ${formatted_weight}kg, and is ${formatted_height}m tall."
