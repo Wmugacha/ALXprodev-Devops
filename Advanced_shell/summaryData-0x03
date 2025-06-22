@@ -16,6 +16,8 @@ for file in *.json; do
     echo "$name,${formatted_height},${formatted_weight}" >> pokemon_report.csv
 done
 
+sed -i 's/[[:space:]]\+$//' pokemon_report.csv
+
 echo >> pokemon_report.csv
 echo >> pokemon_report.csv
 
