@@ -2,12 +2,28 @@
 
 pokemons=("bulbasaur" "ivysaur" "venusaur" "charmander" "charmeleon")
 
+max_retries=3
+
 for p in "${pokemons[@]}"; do
     echo "Extracting data for $p..."
 
-    curl "https://pokeapi.co/api/v2/pokemon/${p}" -o "${p}.json"
+    attempt=1
+    success=0
 
-    echo "Saved Pokemon data for $p to ${p}.json"
-
+    while [[ $attempt -le $max_retries ]]; do
+        curl -s -f "https://pokeapi.co/api/v2/pokemon/${p}" -o "${p}.json"
+        if [[ $? -eq 0 ]]; then
+            echo "Saved Pokemon data for $p to ${p}.json"
+            success=1
+            break
+        else
+            echo "Attempt $attempt failed for $p. Retrying..."
+            sleep $(( 2 ** (attempt - 1) ))
+            ((attempt++))
+        fi
+    done
+    if [[ $success -ne 1 ]]; then
+        echo "Failed to download data for $p after $max_retries attempts."
+    fi
     sleep 2
 done
