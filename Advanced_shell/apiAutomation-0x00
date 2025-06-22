@@ -1,0 +1,23 @@
+#!/bin/bash
+
+name="$1"
+
+if [ -z "$name" ]; then
+    echo "Usage: $0 <Pokemon_name>"
+    exit 1
+fi
+
+URL="https://pokeapi.co/api/v2/pokemon/$name"
+
+FILE="data.json"
+
+LOG="errors.txt"
+
+curl -s -f "$URL" -o "$FILE" 2>> "$LOG"
+
+if [ $? -ne 0 ]; then
+    echo "Failed to fetch data for '$name'. Check $LOG for details."
+    exit 1
+fi
+
+echo "Pokemon details for '$name' saved to $FILE" 
