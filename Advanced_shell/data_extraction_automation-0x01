@@ -1,0 +1,10 @@
+#!/bin/bash
+
+name=$(jq -r '.name' data.json)
+type=$(jq -r '[.types[].type.name] | join(", ")' data.json)
+weight=$(jq -r '.weight' data.json)
+height=$(jq -r '.height' data.json)
+
+height_m=$(echo "scale=2; height / 10" | bc)
+
+echo "$name is of type $type, weighs ${weight}kg, and is ${height}m tall."
