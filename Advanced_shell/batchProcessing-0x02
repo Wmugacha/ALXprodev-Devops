@@ -1,0 +1,12 @@
+#!/bin/bash
+
+pokemons=("Bulbasaur" "Ivysaur" "Venusaur" "Charmander" "Charmeleon")
+
+for p in "${pokemons[@]}"; do
+    echo "Extracting data for $p..."
+
+    curl "https://pokeapi.co/api/v2/pokemon/${p,,}" -o "${p}.json"
+
+    echo "Saved Pokemon data for $p to ${p}.json"
+
+done
